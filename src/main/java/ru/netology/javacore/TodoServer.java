@@ -8,45 +8,65 @@ import java.net.Socket;
 
 public class TodoServer {
 
-    static class Response {
+    static class Request {
         String type;
         String task;
 
         @Override
         public String toString() {
-            return "type = " + type + ", task = " + task;
+            return "type = '" + type + "', task = '" + task + "'";
         }
     }
 
-    private int port = 8081;
+    private final int port;
+    private final Todos todos;
 
     public TodoServer(int port, Todos todos) {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            while (true) {
 
+        this.port = port;
+        this.todos = todos;
+
+    }
+
+    public void start() {
+
+        try (ServerSocket serverSocket = new ServerSocket(this.port)) {
+            System.out.println("\nStarting server at " + this.port + "... \nServer started...\n");
+            while (true) {
                 Socket clientSocket = serverSocket.accept();
-                System.out.println("New connection accepted");
+                System.out.println("New connection accepted!");
+                System.out.println("Client address: " + clientSocket.getInetAddress() +
+                        " , port: " + clientSocket.getPort());
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                 BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
                 String json = in.readLine();
-                Response r = new Gson().fromJson(json, Response.class);
+                System.out.println("Client message: " + json);
+                Request r = new Gson().fromJson(json, Request.class);
                 switch (r.type) {
                     case "ADD":
+                        System.out.println("Add task '" + r.task + "' to TODO list");
                         todos.addTask(r.task);
                         break;
                     case "REMOVE":
+                        System.out.println("Remove task '" + r.task + "' from TODO list");
                         todos.removeTask(r.task);
                         break;
                 }
+                System.out.println("Send TODO list to client... ");
                 out.println(todos.getAllTasks());
-                System.out.println(r);
+                System.out.println("Complete!\n");
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-    public void start() {
-        System.out.println("Starting server at " + port + "...");
+    @Override
+    public String toString() {
+        return "TodoServer { " +
+                " port = " + port +
+                ", todos = " + todos +
+                " } ";
     }
 }

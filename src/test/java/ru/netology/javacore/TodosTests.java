@@ -50,10 +50,9 @@ public class TodosTests {
         todo.addTask("Doing something!");
         todo.removeTask("Doing something!");
 
-        boolean expected = false;
         boolean actual = todo.getAllTasks().contains("Doing something!");
 
-        Assertions.assertEquals(expected, actual, removeTaskTestInfo.getDisplayName() + " NO complete!");
+        Assertions.assertFalse(actual, removeTaskTestInfo.getDisplayName() + " NO complete!");
         System.out.println(removeTaskTestInfo.getDisplayName() + " complete!");
     }
 
@@ -64,16 +63,12 @@ public class TodosTests {
 
         Todos todo = new Todos();
 
-        StringBuilder exp = new StringBuilder();
-
-        exp.append("First task");
-        exp.append(" ");
-        exp.append("Second task");
-        exp.append(" ");
-        exp.append("Third task");
-        exp.append(" ");
-
-        String expected = exp.toString();
+        String expected = "First task" +
+                " " +
+                "Second task" +
+                " " +
+                "Third task" +
+                " ";
 
         todo.addTask("First task");
         todo.addTask("Second task");
