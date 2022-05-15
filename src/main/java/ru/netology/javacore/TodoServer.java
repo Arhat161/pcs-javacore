@@ -9,8 +9,13 @@ import java.net.Socket;
 public class TodoServer {
 
     static class Request {
-        String type;
-        String task;
+
+        String type, task;
+
+        public Request(String type, String task) {
+            this.type = type;
+            this.task = task;
+        }
 
         @Override
         public String toString() {
