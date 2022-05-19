@@ -4,6 +4,7 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class TodosTests {
 
@@ -87,9 +88,9 @@ public class TodosTests {
         todo.addTask("Second task");
         todo.addTask("Third task");
 
-        ArrayList<String> expected = new ArrayList<>(Arrays.asList("First task", "Second task", "Third task"));
+        List<String> expected = new ArrayList<>(Arrays.asList("First task", "Second task", "Third task"));
 
-        ArrayList<String> actual = todo.getAllTasksAsList();
+        List<String> actual = todo.getAllTasksAsList();
 
         Assertions.assertEquals(expected, actual, getAllTasksAsListTestInfo.getDisplayName() + " NO complete!");
         System.out.println(getAllTasksAsListTestInfo.getDisplayName() + " complete!");

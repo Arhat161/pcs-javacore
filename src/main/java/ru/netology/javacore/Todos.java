@@ -4,7 +4,7 @@ import java.util.*;
 
 public class Todos {
 
-    private ArrayList<String> allTasks;
+    private List<String> allTasks;
 
     public Todos() {
         this.allTasks = new ArrayList<>();
@@ -18,7 +18,7 @@ public class Todos {
         this.allTasks.remove(task);
     }
 
-    public void setAllTasks(ArrayList<String> allTasks) {
+    public void setAllTasks(List<String> allTasks) {
         this.allTasks = allTasks;
     }
 
@@ -32,7 +32,7 @@ public class Todos {
         return sb.toString();
     }
 
-    public ArrayList<String> getAllTasksAsList() {
+    public List<String> getAllTasksAsList() {
         return this.allTasks;
     }
 

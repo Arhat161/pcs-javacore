@@ -38,33 +38,36 @@ public class TodoServer {
         try (ServerSocket serverSocket = new ServerSocket(this.port)) {
             System.out.println("\nStarting server at " + this.port + "... \nServer started...\n");
             while (true) {
-                Socket clientSocket = serverSocket.accept();
-                System.out.println("New connection accepted!");
-                System.out.println("Client address: " + clientSocket.getInetAddress() +
-                        " , port: " + clientSocket.getPort());
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                String json = in.readLine();
-                System.out.println("Client message: " + json);
-                Request r = new Gson().fromJson(json, Request.class);
-                switch (r.type) {
-                    case "ADD":
-                        System.out.println("Add task '" + r.task + "' to TODO list");
-                        todos.addTask(r.task);
-                        break;
-                    case "REMOVE":
-                        System.out.println("Remove task '" + r.task + "' from TODO list");
-                        todos.removeTask(r.task);
-                        break;
+                try (
+                        Socket clientSocket = serverSocket.accept();
+                        BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                        PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true)
+                ) {
+                    System.out.println("New connection accepted!");
+                    System.out.println("Client address: " + clientSocket.getInetAddress() +
+                            " , port: " + clientSocket.getPort());
+                    String json = in.readLine();
+                    System.out.println("Client message: " + json);
+                    Request r = new Gson().fromJson(json, Request.class);
+                    switch (r.type) {
+                        case "ADD":
+                            System.out.println("Add task '" + r.task + "' to TODO list");
+                            todos.addTask(r.task);
+                            break;
+                        case "REMOVE":
+                            System.out.println("Remove task '" + r.task + "' from TODO list");
+                            todos.removeTask(r.task);
+                            break;
+                    }
+                    System.out.println("Send TODO list to client... ");
+                    out.println(todos.getAllTasks());
+                    System.out.println("Complete!\n");
                 }
-                System.out.println("Send TODO list to client... ");
-                out.println(todos.getAllTasks());
-                System.out.println("Complete!\n");
             }
         } catch (IOException e) {
+            System.out.println("Can't start server!");
             e.printStackTrace();
         }
-
     }
 
     @Override
